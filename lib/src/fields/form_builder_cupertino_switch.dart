@@ -294,7 +294,7 @@ class FormBuilderCupertinoSwitch extends FormBuilderField<bool> {
   /// [CupertinoColors.destructiveRed] coloring and medium-weighted font. The
   /// row becomes taller in order to display the [helper] widget underneath
   /// [prefix] and [child]. If null, the row is shorter.
-  final Widget? Function(String error)? errorBuilder;
+  final Widget? Function(String error)? error;
 
   /// Creates On/Off Cupertino switch field
   FormBuilderCupertinoSwitch({
@@ -315,7 +315,7 @@ class FormBuilderCupertinoSwitch extends FormBuilderField<bool> {
     this.trackColor,
     this.thumbColor,
     this.shouldExpandedField = false,
-    this.errorBuilder,
+    this.error,
     this.helper,
     this.contentPadding,
     this.prefix,
@@ -371,8 +371,8 @@ class FormBuilderCupertinoSwitch extends FormBuilderField<bool> {
            return CupertinoFormRow(
              error:
                  state.hasError
-                     ? errorBuilder != null
-                         ? errorBuilder(state.errorText ?? '')
+                     ? error != null
+                         ? error(state.errorText ?? '')
                          : Text(state.errorText ?? '')
                      : null,
              helper: helper,

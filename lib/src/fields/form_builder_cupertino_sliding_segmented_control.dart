@@ -60,7 +60,7 @@ class FormBuilderCupertinoSlidingSegmentedControl<T extends Object>
   /// [CupertinoColors.destructiveRed] coloring and medium-weighted font. The
   /// row becomes taller in order to display the [helper] widget underneath
   /// [prefix] and [child]. If null, the row is shorter.
-  final Widget? Function(String error)? errorBuilder;
+  final Widget? Function(String error)? error;
 
   /// Creates field for selection of a value from the `CupertinoSegmentedControl`
   FormBuilderCupertinoSlidingSegmentedControl({
@@ -81,7 +81,7 @@ class FormBuilderCupertinoSlidingSegmentedControl<T extends Object>
     this.thumbColor,
     this.padding,
     this.shouldExpandedField = false,
-    this.errorBuilder,
+    this.error,
     this.helper,
     this.contentPadding,
     this.prefix,
@@ -110,8 +110,8 @@ class FormBuilderCupertinoSlidingSegmentedControl<T extends Object>
            return CupertinoFormRow(
              error:
                  state.hasError
-                     ? errorBuilder != null
-                         ? errorBuilder(state.errorText ?? '')
+                     ? error != null
+                         ? error(state.errorText ?? '')
                          : Text(state.errorText ?? '')
                      : null,
              helper: helper,

@@ -154,7 +154,7 @@ class FormBuilderCupertinoSlider extends FormBuilderField<double> {
   /// [CupertinoColors.destructiveRed] coloring and medium-weighted font. The
   /// row becomes taller in order to display the [helper] widget underneath
   /// [prefix] and [child]. If null, the row is shorter.
-  final Widget? Function(String error)? errorBuilder;
+  final Widget? Function(String error)? error;
 
   /// Creates field for selection of a numerical value on a slider
   FormBuilderCupertinoSlider({
@@ -182,7 +182,7 @@ class FormBuilderCupertinoSlider extends FormBuilderField<double> {
     this.maxValueWidget,
     this.minValueWidget,
     this.valueWidget,
-    this.errorBuilder,
+    this.error,
     this.helper,
     this.contentPadding,
     this.prefix,
@@ -239,8 +239,8 @@ class FormBuilderCupertinoSlider extends FormBuilderField<double> {
            return CupertinoFormRow(
              error:
                  state.hasError
-                     ? errorBuilder != null
-                         ? errorBuilder(state.errorText ?? '')
+                     ? error != null
+                         ? error(state.errorText ?? '')
                          : Text(state.errorText ?? '')
                      : null,
              helper: helper,

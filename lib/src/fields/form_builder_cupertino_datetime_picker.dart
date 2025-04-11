@@ -196,7 +196,7 @@ class FormBuilderCupertinoDateTimePicker extends FormBuilderField<DateTime> {
   /// [CupertinoColors.destructiveRed] coloring and medium-weighted font. The
   /// row becomes taller in order to display the [helper] widget underneath
   /// [prefix] and [child]. If null, the row is shorter.
-  final Widget? Function(String error)? errorBuilder;
+  final Widget? Function(String error)? error;
 
   /// Preset the widget's value.
   final bool autofocus;
@@ -267,7 +267,7 @@ class FormBuilderCupertinoDateTimePicker extends FormBuilderField<DateTime> {
     this.prefix,
     this.contentPadding,
     this.helper,
-    this.errorBuilder,
+    this.error,
     this.autofocus = false,
     this.obscureText = false,
     this.autocorrect = true,
@@ -306,69 +306,72 @@ class FormBuilderCupertinoDateTimePicker extends FormBuilderField<DateTime> {
     this.onEntryModeChanged,
     this.barrierDismissible = true,
   }) : super(
-          builder: (FormFieldState<DateTime?> field) {
-            final state = field as _FormBuilderCupertinoDateTimePickerState;
+         builder: (FormFieldState<DateTime?> field) {
+           final state = field as _FormBuilderCupertinoDateTimePickerState;
 
-            final fieldWidget = FocusTraversalGroup(
-              policy: ReadingOrderTraversalPolicy(),
-              child: CupertinoTextField(
-                onTap: () => state.showPicker(),
-                textDirection: textDirection,
-                textAlign: textAlign,
-                textAlignVertical: textAlignVertical,
-                maxLength: maxLength,
-                autofocus: autofocus,
-                decoration: decoration,
-                readOnly: true,
-                enabled: state.enabled,
-                autocorrect: autocorrect,
-                controller: state._textFieldController,
-                focusNode: state.effectiveFocusNode,
-                inputFormatters: inputFormatters,
-                keyboardType: keyboardType,
-                maxLines: maxLines,
-                obscureText: obscureText,
-                showCursor: showCursor,
-                minLines: minLines,
-                expands: expands,
-                style: style,
-                onEditingComplete: onEditingComplete,
-                cursorColor: cursorColor,
-                cursorRadius: cursorRadius,
-                cursorWidth: cursorWidth,
-                enableInteractiveSelection: enableInteractiveSelection,
-                keyboardAppearance: keyboardAppearance,
-                scrollPadding: scrollPadding,
-                strutStyle: strutStyle,
-                textCapitalization: textCapitalization,
-                textInputAction: textInputAction,
-                maxLengthEnforcement: maxLengthEnforcement,
-              ),
-            );
+           final fieldWidget = FocusTraversalGroup(
+             policy: ReadingOrderTraversalPolicy(),
+             child: CupertinoTextField(
+               onTap: () => state.showPicker(),
+               textDirection: textDirection,
+               textAlign: textAlign,
+               textAlignVertical: textAlignVertical,
+               maxLength: maxLength,
+               autofocus: autofocus,
+               decoration: decoration,
+               readOnly: true,
+               enabled: state.enabled,
+               autocorrect: autocorrect,
+               controller: state._textFieldController,
+               focusNode: state.effectiveFocusNode,
+               inputFormatters: inputFormatters,
+               keyboardType: keyboardType,
+               maxLines: maxLines,
+               obscureText: obscureText,
+               showCursor: showCursor,
+               minLines: minLines,
+               expands: expands,
+               style: style,
+               onEditingComplete: onEditingComplete,
+               cursorColor: cursorColor,
+               cursorRadius: cursorRadius,
+               cursorWidth: cursorWidth,
+               enableInteractiveSelection: enableInteractiveSelection,
+               keyboardAppearance: keyboardAppearance,
+               scrollPadding: scrollPadding,
+               strutStyle: strutStyle,
+               textCapitalization: textCapitalization,
+               textInputAction: textInputAction,
+               maxLengthEnforcement: maxLengthEnforcement,
+             ),
+           );
 
-            return CupertinoFormRow(
-              error: state.hasError
-                  ? errorBuilder != null
-                      ? errorBuilder(state.errorText ?? '')
-                      : Text(state.errorText ?? '')
-                  : null,
-              helper: helper,
-              padding: contentPadding,
-              prefix: prefix,
-              child: shouldExpandedField
-                  ? SizedBox(width: double.infinity, child: fieldWidget)
-                  : fieldWidget,
-            );
-          },
-        );
+           return CupertinoFormRow(
+             error:
+                 state.hasError
+                     ? error != null
+                         ? error(state.errorText ?? '')
+                         : Text(state.errorText ?? '')
+                     : null,
+             helper: helper,
+             padding: contentPadding,
+             prefix: prefix,
+             child:
+                 shouldExpandedField
+                     ? SizedBox(width: double.infinity, child: fieldWidget)
+                     : fieldWidget,
+           );
+         },
+       );
 
   @override
   FormBuilderFieldState<FormBuilderCupertinoDateTimePicker, DateTime>
-      createState() => _FormBuilderCupertinoDateTimePickerState();
+  createState() => _FormBuilderCupertinoDateTimePickerState();
 }
 
-class _FormBuilderCupertinoDateTimePickerState extends FormBuilderFieldState<
-    FormBuilderCupertinoDateTimePicker, DateTime> {
+class _FormBuilderCupertinoDateTimePickerState
+    extends
+        FormBuilderFieldState<FormBuilderCupertinoDateTimePicker, DateTime> {
   late TextEditingController _textFieldController;
 
   late DateFormat _dateFormat;
@@ -408,7 +411,7 @@ class _FormBuilderCupertinoDateTimePickerState extends FormBuilderFieldState<
     return switch (widget.inputType) {
       InputType.time => DateFormat.Hm(languageCode),
       InputType.date => DateFormat.yMd(languageCode),
-      InputType.both => DateFormat.yMd(languageCode).add_Hms()
+      InputType.both => DateFormat.yMd(languageCode).add_Hms(),
     };
   }
 
@@ -488,12 +491,20 @@ class _FormBuilderCupertinoDateTimePickerState extends FormBuilderFieldState<
               top: false,
               child: CupertinoDatePicker(
                 mode: CupertinoDatePickerMode.time,
-                initialDateTime: currentValue ??
-                    DateTime(0, 0, 0, widget.initialTime.hour,
-                        widget.initialTime.minute),
+                initialDateTime:
+                    currentValue ??
+                    DateTime(
+                      0,
+                      0,
+                      0,
+                      widget.initialTime.hour,
+                      widget.initialTime.minute,
+                    ),
                 onDateTimeChanged: (DateTime newDateTime) {
                   pickedTime = TimeOfDay(
-                      hour: newDateTime.hour, minute: newDateTime.minute);
+                    hour: newDateTime.hour,
+                    minute: newDateTime.minute,
+                  );
                 },
               ),
             ),
@@ -506,7 +517,12 @@ class _FormBuilderCupertinoDateTimePickerState extends FormBuilderFieldState<
 
   /// Sets the hour and minute of a [DateTime] from a [TimeOfDay].
   DateTime combine(DateTime date, TimeOfDay? time) => DateTime(
-      date.year, date.month, date.day, time?.hour ?? 0, time?.minute ?? 0);
+    date.year,
+    date.month,
+    date.day,
+    time?.hour ?? 0,
+    time?.minute ?? 0,
+  );
 
   DateTime? convert(TimeOfDay? time) =>
       time == null ? null : DateTime(1, 1, 1, time.hour, time.minute);
